@@ -1,0 +1,11 @@
+[project]
+name = "yifan-studybridge"
+version = "0.1.0"
+description = "Personalised maths preparation and transparent education giving"
+authors = [{name = "Yifan Yan"}]
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+

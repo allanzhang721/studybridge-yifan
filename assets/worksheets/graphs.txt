@@ -1,0 +1,28 @@
+PAGE 03: LINEAR GRAPHS - A REVISION ATTEMPT
+Learning goal: connect an equation with slope and intercept.
+
+WHAT I CAN ALREADY DO
+Equation: y = 2x + 1. Find y when x = 2.
+Student working: y = 2(2) + 1 = 5.
+
+STUDENT WORK TO REVIEW (CONTAINS A MISTAKE)
+Question: state the slope and y-intercept of y = 2x + 1.
+Student answer: slope = 1; y-intercept = 2.
+Student explanation: the last number is the slope.
+Confidence before checking: high.
+
+VALUE TABLE FOR CHECKING
+x = 0, y = 1; x = 1, y = 3; x = 2, y = 5.
+What is y at x = 0? How much does y change per step?
+
+REVIEWED PRACTICE CHECK
+A. y = 2x + 1 at x = 0: student answer y = 1. Correct.
+B. y = 2x + 1 at x = 3: student answer y = 7. Correct.
+C. y = -3x + 4 at x = 2: student answer y = -2. Correct.
+
+TRY A NEW QUESTION
+For y = -2x + 5, state slope and intercept.
+Then find y when x = 3.
+
+Exam scope: slope and evaluating linear functions.
+Fictional student work; review the reasoning, not just the final answer.

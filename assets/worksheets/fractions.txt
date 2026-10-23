@@ -1,0 +1,27 @@
+PAGE 01: FRACTIONS - A REVISION ATTEMPT
+Learning goal: add fractions with unlike denominators.
+
+WHAT I CAN ALREADY DO
+Question: calculate 2/7 + 3/7.
+Student answer: 5/7. The parts are the same size.
+
+STUDENT WORK TO REVIEW (CONTAINS A MISTAKE)
+Question: calculate 1/3 + 1/4.
+Student line 1: 1/3 + 1/4 = (1 + 1)/(3 + 4) = 2/7.
+Student explanation: I added the top numbers and the bottom numbers.
+Confidence before checking: high.
+
+REVIEW PROMPT
+Can adding a positive fraction make 1/3 smaller?
+Draw the two fractions using equal-sized bars.
+
+REVIEWED PRACTICE CHECK
+A. 2/5 + 1/5: student answer 3/5. Correct.
+B. 1/2 + 1/3: student answer 2/5. Needs practice.
+C. 3/4 - 1/6: student answer 2/2. Needs practice.
+
+TRY A NEW QUESTION
+Calculate 2/3 + 1/4. Explain what each denominator means.
+
+Exam scope: fraction addition and subtraction.
+Fictional student work; review the reasoning, not just the final answer.
