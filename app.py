@@ -1,9 +1,10 @@
-"""StudyBridge — independent Streamlit application by Yifan Yan."""
+"""Practilume — independent Streamlit application by Yifan Yan."""
 from __future__ import annotations
 
 import copy
 import html
 import json
+import sqlite3
 import sys
 from pathlib import Path
 
@@ -14,7 +15,7 @@ if str(ROOT) not in sys.path:
 import pandas as pd
 import streamlit as st
 
-from studybridge import ai
+from studybridge import ai, current_ui
 from studybridge.catalog import TOPICS, SAMPLE_TEXT, SAMPLE_EXAM
 from studybridge.engine import (new_workspace, make_course, local_outline, build_exam, grade_exam,
     topic_performance, calibration, preview_order, sandbox_totals, digest, identifier, now, exam_intact)
@@ -26,7 +27,7 @@ from studybridge.examples import EXAMPLES, example_course
 from studybridge import worksheet_ui, demo_ui, summary_dashboard, impact_visuals
 from studybridge import demo as demo_flow
 
-st.set_page_config(page_title="StudyBridge | Learn Forward, Give Back", page_icon="🌱", layout="wide", initial_sidebar_state="auto")
+st.set_page_config(page_title="Practilume | Learn Forward, Give Back", page_icon="🌱", layout="wide", initial_sidebar_state="auto")
 st.markdown(f"<style>{(ROOT / 'assets/style.css').read_text(encoding='utf-8')}</style>", unsafe_allow_html=True)
 
 for key, value in {"workspace": new_workspace(), "page": "Demo & examples" if st.query_params.get("demo") == "1" else "Overview", "username": None, "revision": 0,
@@ -51,12 +52,42 @@ def state():
 
 def save():
     if st.session_state.username:
+        st.session_state.save_pending = True
         try:
             st.session_state.revision = Store().save(st.session_state.username, state(), st.session_state.revision)
         except ConflictError:
-            st.session_state.workspace, st.session_state.revision = Store().load(st.session_state.username)
-            st.error("Another tab saved changes first. We reloaded its latest version; please repeat this action.")
+            st.session_state.save_error = "Another tab saved changes first. Your unsaved work is still here. Export it before loading the saved version."
+            st.rerun()
+        except (OSError, sqlite3.Error, ValueError):
+            st.session_state.save_error = "Saving failed. Your changes are still in this session. Retry saving or export a copy before leaving."
+            st.rerun()
+        else:
+            st.session_state.save_pending = False
+            st.session_state.save_error = None
+            st.session_state.last_saved = now()
+
+
+def save_recovery():
+    if not st.session_state.get("save_pending"):
+        return
+    st.error(st.session_state.get("save_error") or "Your latest changes have not been saved.")
+    st.download_button("Export unsaved work", json.dumps(state(), ensure_ascii=False, indent=2), "practilume-unsaved-records.json", "application/json")
+    if st.button("Retry saving"):
+        save()
+        st.rerun()
+    discard = st.checkbox("I have exported my unsaved changes and want to load the saved version.")
+    if st.button("Load saved version", disabled=not discard):
+        try:
+            loaded, revision = Store().load(st.session_state.username)
+        except (OSError, sqlite3.Error, ValueError):
+            st.error("The saved workspace is unavailable. Your current work has been kept.")
             st.stop()
+        st.session_state.workspace, st.session_state.revision = loaded, revision
+        st.session_state.save_pending = False
+        st.session_state.save_error = None
+        st.session_state.selected_course, st.session_state.active_exam, st.session_state.draft = None, None, None
+        st.rerun()
+    st.stop()
 
 
 def go(page, message=None):
@@ -123,19 +154,29 @@ def use_ai_budget():
 
 
 with st.sidebar:
-    st.markdown('<div class="brand"><div class="brand-mark">↗</div><div><div class="brand-name">StudyBridge</div><div class="brand-sub">LEARN FORWARD. GIVE BACK.</div></div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="brand"><div class="brand-mark">↗</div><div><div class="brand-name">Practilume</div><div class="brand-sub">LEARN FORWARD. GIVE BACK.</div></div></div>', unsafe_allow_html=True)
     st.markdown('<div class="sidebar-label">YOUR STUDY SPACE</div>', unsafe_allow_html=True)
-    for name, label in [("Overview", "◈  Overview"), ("Demo & examples", "▷  Demo & examples"), ("Worksheet images", "▧  Worksheet images"), ("My courses", "▤  My courses"), ("Mock exams", "✎  Mock exams"),
+    for name, label in [("Overview", "◈  Overview"), ("Worksheet images", "▧  Worksheet images"), ("My courses", "▤  My courses"), ("Mock exams", "✎  Mock exams"),
                         ("Review & practice", "↻  Review & practice"), ("Impact ledger", "♡  Impact ledger"), ("Plans & account", "⚙  Plans & account")]:
         if st.button(label, key=f"nav_{name}", type="primary" if st.session_state.page == name else "secondary", width="stretch"):
             go(name)
     st.markdown('<div class="sidebar-label">WORKSPACE</div>', unsafe_allow_html=True)
     st.caption(f"Signed in as {st.session_state.username}" if st.session_state.username else "Guest workspace · session only")
+    if st.session_state.get("save_pending"):
+        st.caption("Not saved · your changes need attention")
+    elif st.session_state.username:
+        saved_at = st.session_state.get("last_saved")
+        st.caption(f"Saved · {saved_at}" if saved_at else "Saved workspace loaded")
+        st.caption("Confirmed courses, exams and submitted reviews save automatically.")
+    else:
+        st.caption("Accounts save on this server only. Export backups; cloud restarts can remove local records.")
     st.caption("Plus preview · no payment" if state()["plus_preview"] else "Free learning tools")
     st.caption("AI model: " + ai.configuration()[1] if ai.configured() else "Local demo · AI not connected")
     if st.button("Save & manage workspace", width="stretch"):
         go("Plans & account")
     st.markdown('<div class="sidebar-note">Small steps. Real understanding.<br>Free practice today, with a transparent plan to support education tomorrow.</div><div class="sidebar-author">Created by <b>Yifan Yan</b><br>An independent Explain It! extension</div>', unsafe_allow_html=True)
+
+save_recovery()
 
 if st.session_state.flash:
     st.success(st.session_state.flash)
@@ -214,13 +255,13 @@ def examples_page():
             st.caption("Topic scanning, question generation and answer checking work locally. Optional AI features need the operator's API key and model setting.")
         st.markdown("**Suggested starting model:** [`gpt-6-luna`](https://developers.openai.com/api/docs/models/gpt-6-luna). It supports text/image input and structured outputs. Test its explanations on your course material before choosing a production model.")
         st.write("AI is used for organising text, transcribing worksheet images for your review, and explaining mistakes. The local engine computes and verifies the supported numerical answers.")
-    st.caption("The previews below are original StudyBridge illustrations. The source buttons open the separately credited online pictures. Loading an example uses prepared text; it does not run OCR or make an AI request.")
+    st.caption("The previews below are original Practilume illustrations. The source buttons open the separately credited online pictures. Loading an example uses prepared text; it does not run OCR or make an AI request.")
     for example in EXAMPLES:
         with st.container(border=True):
             visual, content = st.columns([1.15, 1], gap="large")
             with visual:
                 st.image(example["svg"], width="stretch")
-                st.caption("StudyBridge illustration · " + example["description"])
+                st.caption("Practilume illustration · " + example["description"])
             with content:
                 st.markdown(f"#### {example['title']}")
                 st.latex(worked_math[example["id"]][0])
@@ -243,7 +284,7 @@ def examples_page():
                 st.markdown(f"[Reference image licence]({example['license_url']})")
                 with st.expander("Read or download the example notes"):
                     st.write(example["notes"])
-                    st.download_button("Download checked notes", example["notes"], f"studybridge-{example['id']}.txt", "text/plain", key=f"notes_{example['id']}")
+                    st.download_button("Download checked notes", example["notes"], f"practilume-{example['id']}.txt", "text/plain", key=f"notes_{example['id']}")
     st.caption("These are learning references, not partnerships or evidence of educational impact. External pictures open on their original websites.")
 
 
@@ -424,7 +465,7 @@ def render_exam(exam):
     b.metric("Time guide", f"{exam['minutes']} min")
     c.metric("Marks", sum(q["marks"] for q in exam["questions"]))
     st.caption("Untimed practice · final-answer marks only. Submit once; use a fresh paper for a clean retest.")
-    st.download_button("↓ Download student paper", exam_pdf(exam), file_name=f"studybridge-{exam['id'][:6]}-paper.pdf", mime="application/pdf", key=f"paper_{exam['id']}")
+    st.download_button("↓ Download student paper", exam_pdf(exam), file_name=f"practilume-{exam['id'][:6]}-paper.pdf", mime="application/pdf", key=f"paper_{exam['id']}")
     with st.expander("View saved blueprint & evidence"):
         st.dataframe([{"Topic": TOPICS[t]["name"], "Questions": n} for t, n in exam["distribution"].items()], hide_index=True, width="stretch")
         st.caption(f"Frozen {exam['created']} · fingerprint {exam['fingerprint'][:24]}")
@@ -435,7 +476,7 @@ def render_exam(exam):
                 st.text(item["quote"])
     if attempt:
         st.success(f"Completed · {attempt['earned']} / {attempt['possible']} marks. Open Review & practice for your next steps.")
-        st.download_button("↓ Download answer key", exam_pdf(exam, answers=True), file_name=f"studybridge-{exam['id'][:6]}-answers.pdf", mime="application/pdf", key=f"key_{exam['id']}")
+        st.download_button("↓ Download answer key", exam_pdf(exam, answers=True), file_name=f"practilume-{exam['id'][:6]}-answers.pdf", mime="application/pdf", key=f"key_{exam['id']}")
         if st.button("Review this attempt →", type="primary"):
             st.session_state.active_exam = exam["id"]
             go("Review & practice")
@@ -606,8 +647,8 @@ def impact_page():
         else:
             empty("No live batches yet. There is no selected recipient, collected payment, or completed donation to report.")
         a, b = st.columns(2)
-        a.download_button("Download public ledger · CSV", csv_bytes(ledger["batches"]), "studybridge-public-ledger.csv", "text/csv", width="stretch")
-        b.download_button("Download ledger & history · JSON", json.dumps(ledger, indent=2), "studybridge-public-ledger.json", "application/json", width="stretch")
+        a.download_button("Download public ledger · CSV", csv_bytes(ledger["batches"]), "practilume-public-ledger.csv", "text/csv", width="stretch")
+        b.download_button("Download ledger & history · JSON", json.dumps(ledger, indent=2), "practilume-public-ledger.json", "application/json", width="stretch")
         st.caption("Local record checksum: " + digest(ledger)[:24] + ". A checksum alone is not independent proof or a blockchain record.")
         with st.expander("Corrections and reconciliation history"):
             if ledger["corrections"]:
@@ -680,7 +721,7 @@ def account_page():
     if st.session_state.username:
         st.write(f"Signed in as **{st.session_state.username}**. Course text and study records are saved in this app's local database.")
         cols = st.columns(2)
-        cols[0].download_button("Export my learning records", json.dumps(state(), ensure_ascii=False, indent=2), "studybridge-my-records.json", "application/json", width="stretch")
+        cols[0].download_button("Export my learning records", json.dumps(state(), ensure_ascii=False, indent=2), "practilume-my-records.json", "application/json", width="stretch")
         if cols[1].button("Sign out", width="stretch"):
             logout()
         with st.expander("Delete my account and learning records"):
@@ -720,7 +761,7 @@ def account_page():
                     go("Overview", "Your workspace is saved. Keep your password; email recovery is not implemented in this local prototype.")
                 except ValueError as exc:
                     st.error(str(exc))
-        st.download_button("Export guest learning records", json.dumps(state(), ensure_ascii=False, indent=2), "studybridge-guest-records.json", "application/json")
+        st.download_button("Export guest learning records", json.dumps(state(), ensure_ascii=False, indent=2), "practilume-guest-records.json", "application/json")
     with st.expander("Privacy, AI and prototype scope"):
         st.write("Raw uploaded files are processed in memory. Extracted text and learning records are stored locally only for signed-in accounts. Guest sessions are not saved as accounts. Other users cannot browse your courses. Public ledger questions are moderated separately.")
         st.write("Optional AI analysis sends the selected text or worksheet images to OpenAI only after you check the relevant consent box. Responses use store=False; this is not a promise of zero provider retention. The operator supplies credentials, and students never enter API keys.")
@@ -739,8 +780,8 @@ def demo_page():
         demo_ui.render(go, examples_page)
 
 
-render_page = {"Overview": overview, "Demo & examples": demo_page, "Worksheet images": lambda: worksheet_ui.render(save, go, use_ai_budget), "My courses": courses_page, "Mock exams": exams_page,
- "Review & practice": review_page, "Impact ledger": impact_page, "Plans & account": account_page}[st.session_state.page]
+render_page = {"Overview": lambda: current_ui.overview(state(), go, demo_page, load_sample), "Demo & examples": lambda: current_ui.overview(state(), go, demo_page, load_sample), "Worksheet images": lambda: current_ui.upload(state(), save, go, use_ai_budget), "My courses": lambda: current_ui.courses(state(), save), "Mock exams": lambda: current_ui.exams(state(), save, use_ai_budget),
+ "Review & practice": review_page, "Impact ledger": current_ui.impact, "Plans & account": account_page}[st.session_state.page]
 with st.empty().container():
     render_page()
-st.markdown('<div class="footer">STUDYBRIDGE · Created by Yifan Yan · Learn at your pace. Make your next step count.</div>', unsafe_allow_html=True)
+st.markdown('<div class="footer">PRACTILUME · Created by Yifan Yan · Learn at your pace. Make your next step count.</div>', unsafe_allow_html=True)

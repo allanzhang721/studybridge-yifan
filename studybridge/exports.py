@@ -24,7 +24,7 @@ def exam_pdf(exam: dict, answers: bool = False) -> bytes:
     heading = ParagraphStyle("StudyQuestion", parent=body, fontSize=11, leading=17, spaceAfter=8)
     doc = SimpleDocTemplate(out, pagesize=A4, rightMargin=48, leftMargin=48, topMargin=48, bottomMargin=48,
                             title=exam["course_title"] + (" - Answer key" if answers else " - Mock exam"), author="Yifan Yan")
-    story = [Paragraph("STUDYBRIDGE / " + ("ANSWER KEY" if answers else "MOCK EXAM"), small),
+    story = [Paragraph("PRACTILUME / " + ("ANSWER KEY" if answers else "MOCK EXAM"), small),
              Paragraph(escape(exam["course_title"]), title),
              Paragraph(f"{len(exam['questions'])} questions  |  {sum(q['marks'] for q in exam['questions'])} marks  |  {exam['minutes']} minutes", body),
              Paragraph("Practice assessment. This is not a prediction of an actual examination.", small),
@@ -50,7 +50,7 @@ def exam_pdf(exam: dict, answers: bool = False) -> bytes:
         canvas.saveState()
         canvas.setFont("Helvetica", 8)
         canvas.setFillColor(colors.HexColor("#536B63"))
-        canvas.drawString(48, 28, "StudyBridge | Created by Yifan Yan")
+        canvas.drawString(48, 28, "Practilume | Created by Yifan Yan")
         canvas.drawRightString(A4[0]-48, 28, f"Page {document.page}")
         canvas.restoreState()
     doc.build(story, onFirstPage=footer, onLaterPages=footer)

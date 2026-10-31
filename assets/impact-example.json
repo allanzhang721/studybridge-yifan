@@ -1,0 +1,22 @@
+{
+  "label": "FICTIONAL DEMO — no real payments or donations",
+  "currency": "CNY",
+  "unitPrice": 29,
+  "allocationPerOrder": 3,
+  "events": [
+    {"id":"DEMO-E001","date":"2026-09-01","type":"Order batch","reference":"DEMO-O001","units":40,"sales":1160,"allocation":120,"transferred":0,"confirmed":0,"evidence":"DEMO-POLICY","note":"40 fictional study packs"},
+    {"id":"DEMO-E002","date":"2026-09-03","type":"Order batch","reference":"DEMO-O002","units":30,"sales":870,"allocation":90,"transferred":0,"confirmed":0,"evidence":"DEMO-POLICY","note":"30 fictional study packs"},
+    {"id":"DEMO-E003","date":"2026-09-05","type":"Order batch","reference":"DEMO-O003","units":25,"sales":725,"allocation":75,"transferred":0,"confirmed":0,"evidence":"DEMO-POLICY","note":"25 fictional study packs"},
+    {"id":"DEMO-E004","date":"2026-09-06","type":"Refund","reference":"DEMO-O003","units":-5,"sales":-145,"allocation":-15,"transferred":0,"confirmed":0,"evidence":"DEMO-REFUND","note":"5 refunded packs reverse their education allocation"},
+    {"id":"DEMO-E005","date":"2026-09-10","type":"Transfer","reference":"DEMO-T001","units":0,"sales":0,"allocation":0,"transferred":120,"confirmed":0,"evidence":"DEMO-RECEIPT-A","note":"Fictional Reading Corner A; receipt and acknowledgement present"},
+    {"id":"DEMO-E006","date":"2026-09-12","type":"Recipient confirmation","reference":"DEMO-T001","units":0,"sales":0,"allocation":0,"transferred":0,"confirmed":120,"evidence":"DEMO-ACK-A","note":"Acknowledges receipt only; educational outcomes not assessed"},
+    {"id":"DEMO-E007","date":"2026-09-15","type":"Transfer","reference":"DEMO-T002","units":0,"sales":0,"allocation":0,"transferred":80,"confirmed":0,"evidence":"DEMO-RECEIPT-B","note":"Fictional Learning Kit B; recipient acknowledgement still pending"}
+  ],
+  "documents": [
+    {"id":"DEMO-POLICY","title":"Allocation policy","kind":"Policy example","text":"FICTIONAL DEMO ONLY. A study pack is priced at CNY 29. CNY 3 per non-refunded pack is reserved for education giving. A full refund reverses CNY 29 in sales and CNY 3 in the reserve. Sales are not donations. The allocation is a commitment, not a completed transfer. Fees and operating costs are outside this simplified example. Opening reserve is zero. No live checkout or partner exists."},
+    {"id":"DEMO-REFUND","title":"Refund reconciliation","kind":"Refund example","text":"FICTIONAL DEMO ONLY. Reference DEMO-O003. Five of 25 example packs were refunded on 2026-09-06. Sales adjustment: CNY -145. Education allocation adjustment: CNY -15. No transfer was reversed because these allocations had not yet been paid out. This is not a payment-provider receipt."},
+    {"id":"DEMO-RECEIPT-A","title":"Transfer A receipt","kind":"Receipt example","text":"FICTIONAL DEMO ONLY — NOT A BANK RECEIPT. Transfer DEMO-T001, 2026-09-10, CNY 120. Sender: Example Practilume Fund. Recipient: Fictional Reading Corner A. Purpose: reading materials. This illustrative record has no bank account, transaction on a payment network or blockchain transaction. See DEMO-ACK-A for the separate example acknowledgement."},
+    {"id":"DEMO-ACK-A","title":"Recipient A acknowledgement","kind":"Recipient review example","text":"FICTIONAL DEMO ONLY. Reference DEMO-T001. Example recipient statement dated 2026-09-12: We acknowledge receipt of CNY 120 for reading materials. This confirms receipt, not purchases, delivery or improved learning outcomes. Spending evidence and an activity report remain pending. This statement was authored as demonstration content, not submitted by a real recipient."},
+    {"id":"DEMO-RECEIPT-B","title":"Transfer B receipt","kind":"Receipt example","text":"FICTIONAL DEMO ONLY — NOT A BANK RECEIPT. Transfer DEMO-T002, 2026-09-15, CNY 80. Recipient: Fictional Learning Kit B. Platform-side transfer record only. No example recipient acknowledgement has been recorded. Keep this visibly pending until separate evidence arrives; do not count it as confirmed receipt."}
+  ]
+}

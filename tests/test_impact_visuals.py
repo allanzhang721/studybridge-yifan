@@ -38,7 +38,7 @@ def test_rewritten_chain_is_detected_against_original_reference():
 def test_proof_demo_does_not_modify_live_or_personal_records(tmp_path, monkeypatch):
     monkeypatch.setenv("STUDYBRIDGE_DB_PATH", str(tmp_path / "proof.sqlite"))
     before = load_ledger()
-    app = AppTest.from_file(str(Path(__file__).resolve().parents[1] / "app.py")).run()
+    app = AppTest.from_file(str(Path(__file__).resolve().parents[1] / "legacy_app.py")).run()
     app.button(key="nav_Impact ledger").click().run()
     assert not app.exception
     assert any(t.label == "Blockchain & proof" for t in app.tabs)

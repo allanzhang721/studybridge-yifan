@@ -167,7 +167,7 @@ def render(pages, outline, *, key, owner, topics=None, save=None, heading=True, 
         st.caption("Confirm your reviewed material, then continue to the mock exam.")
 
         with st.expander("Check sources & formulas"):
-            st.caption("Optional reference · general formulas are StudyBridge reference material, not extracted from your upload.")
+            st.caption("Optional reference · general formulas are Practilume reference material, not extracted from your upload.")
             for topic in summary["topics"]:
                 with st.expander(TOPICS[topic]["name"] + " · formula and evidence"):
                     st.latex(CONCEPTS[topic][1])
@@ -187,7 +187,7 @@ def render(pages, outline, *, key, owner, topics=None, save=None, heading=True, 
             report = {"summary": summary, "study_board": owner.get("study_board"),
                       "method": outline["method"], "note": "Source excerpts are unverified; any saved study status is self-reported."}
             st.download_button("Download summary", json.dumps(report, ensure_ascii=False, indent=2),
-                               "studybridge-summary.json", "application/json", key=f"{prefix}_export")
+                               "practilume-summary.json", "application/json", key=f"{prefix}_export")
 
 
 def render_mistakes(cases):

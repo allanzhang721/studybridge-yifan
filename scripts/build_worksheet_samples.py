@@ -23,7 +23,7 @@ with sync_playwright() as p:
         section:nth-of-type(2){{background:#edf3e7;border-left:5px solid #6b9876;border-radius:12px;padding:18px 22px}}
         section:nth-of-type(3){{background:#fff4e5;border-left:5px solid #ce9351;border-radius:12px;padding:18px 22px;color:#614223}}
         footer{{position:absolute;bottom:40px;left:70px;right:70px;border-top:1px solid #cbd9d1;padding-top:17px;font-size:16px;color:#65796f}}
-        </style></head><body><article><header>STUDYBRIDGE / SAMPLE LEARNING MATERIAL</header>{sections}
+        </style></head><body><article><header>PRACTILUME / SAMPLE LEARNING MATERIAL</header>{sections}
         <footer>Created by Yifan Yan · Original fictional worksheet · For testing, not an official exam</footer></article></body></html>''')
         assert page.locator('section').last.bounding_box()['y'] + page.locator('section').last.bounding_box()['height'] < 1320
         page.locator('article').screenshot(path=str(ASSETS / f"{sample['id']}.png"))

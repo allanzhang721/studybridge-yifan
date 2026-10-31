@@ -51,7 +51,12 @@ def configuration() -> tuple[str, str]:
             model = model or st.secrets.get("OPENAI_MODEL", "")
         except (FileNotFoundError, KeyError):
             pass
-    return key, model
+    try:
+        import streamlit as st
+        key = st.session_state.get("personal_api_key") or key
+    except (ImportError, RuntimeError):
+        pass
+    return key, model or "gpt-4.1-mini"
 
 
 def configured() -> bool:
@@ -59,7 +64,7 @@ def configured() -> bool:
 
 
 def request(schema, instructions: str, payload: dict, images: list[dict] | None = None):
-    from openai import OpenAI, OpenAIError
+    from openai import OpenAI, OpenAIError, AuthenticationError
     key, model = configuration()
     if not key or not model:
         raise ValueError("AI is not configured on this server. Use the local tools or ask the operator to configure the service.")
@@ -71,13 +76,17 @@ def request(schema, instructions: str, payload: dict, images: list[dict] | None 
                             {"type": "input_image", "image_url": f"data:{item['mime']};base64," + base64.b64encode(item["bytes"]).decode("ascii"), "detail": "high"}])
     try:
         response = OpenAI(api_key=key, timeout=45, max_retries=1).responses.parse(
-            model=model, store=False, max_output_tokens=3500, text_format=schema,
+            model=model, store=False, max_output_tokens=10000, text_format=schema,
             input=[{"role": "system", "content": instructions},
                    {"role": "user", "content": content}],
         )
         if response.status != "completed" or response.output_parsed is None:
             raise ValueError("The AI could not complete this request. Your existing records have not changed.")
         return response.output_parsed.model_dump()
+    except AuthenticationError:
+        import streamlit as st
+        st.session_state.pop("personal_api_key", None)
+        raise ValueError("The API key was rejected. Enter a working key to continue.") from None
     except OpenAIError:
         # Never surface provider tracebacks, credentials, or material in UI errors.
         raise ValueError("The AI service is unavailable or its configuration is invalid. Try the local tools; the operator can check service settings.") from None

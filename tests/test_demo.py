@@ -1,4 +1,4 @@
-﻿from copy import deepcopy
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -56,7 +56,7 @@ def test_entire_guided_ui_flow_is_isolated_and_restartable(tmp_path, monkeypatch
     def check(label):
         next(c for c in app.checkbox if label in c.label).check()
 
-    click("Start full demo →")
+    # The walkthrough is now embedded directly in Overview.
     app.radio(key="guided_demo_view").set_value("Try it step by step").run()
     click("Load the 3 sample images")
     click("Next: review the image text →")

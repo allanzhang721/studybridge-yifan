@@ -4,7 +4,7 @@ import json
 from studybridge.storage import Store
 from studybridge.ledger import load_ledger, totals
 
-parser = argparse.ArgumentParser(description="StudyBridge local operator tools; never exposed in the learner UI.")
+parser = argparse.ArgumentParser(description="Practilume local operator tools; never exposed in the learner UI.")
 sub = parser.add_subparsers(dest="command", required=True)
 sub.add_parser("validate-ledger")
 sub.add_parser("pending")

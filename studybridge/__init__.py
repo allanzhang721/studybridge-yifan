@@ -1,2 +1,2 @@
-"""StudyBridge, an independent learning application by Yifan Yan."""
+"""Practilume, an independent learning application by Yifan Yan."""
 

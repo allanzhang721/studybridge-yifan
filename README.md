@@ -1,4 +1,5 @@
-﻿# StudyBridge
+> Current release: `app.py` now provides automatic AI image reading, original-image preservation, AI mock papers, a mistake board and a transparent giving demo. See [STREAMLIT_UPDATE.md](STREAMLIT_UPDATE.md) for features and remaining migration limitations. The earlier UI is retained as `legacy_app.py`; walkthrough notes below describe that version. Community Cloud local storage is not durable.
+# Practilume
 
 **Author: Yifan Yan**
 
@@ -30,7 +31,7 @@ For a **continuous end-to-end demonstration**, choose **Start full demo** on the
 
 The walkthrough uses the same course, generation, grading, calibration and export functions as the rest of the app. Its records live in a separate, session-only workspace; they do not alter signed-in course history, paid entitlements or the live donation ledger. It makes no AI requests: prepared image transcripts are clearly identified. The demo's fictional post-exam source changes the next paper's topic balance without rewriting the original. It does not establish future predictive accuracy. **Restart this demo** clears only the walkthrough.
 
-Open **Demo & examples → Topic examples** for three visual lessons on fractions, slope and probability. Each has an original StudyBridge diagram, a worked example, downloadable checked notes and a link to an online reference picture with its creator/licence. **Practise this topic** creates a focused course for the existing exam flow. These notes are prepared examples, not OCR output; no AI request is made when loading them. The online images remain on their source websites; their artwork is not bundled or copied into the previews.
+Open **Demo & examples → Topic examples** for three visual lessons on fractions, slope and probability. Each has an original Practilume diagram, a worked example, downloadable checked notes and a link to an online reference picture with its creator/licence. **Practise this topic** creates a focused course for the existing exam flow. These notes are prepared examples, not OCR output; no AI request is made when loading them. The online images remain on their source websites; their artwork is not bundled or copied into the previews.
 
 1. Choose **Explore sample course**. The materials are explicitly fictional.
 2. Open **Mock exams**, confirm the scope, and generate a free five-question paper.
@@ -134,7 +135,7 @@ Tests cover computed answer consistency, numerical input safety, grading, source
 
 ## Attribution
 
-StudyBridge author: **Yifan Yan**. The app develops the product direction discussed for Explain It!, whose original team includes Yifan Yan, Meiyu Shen and Jiachen Yu. This independent extension does not reassign ownership of the team's earlier work. Roadmap items are not represented as completed achievements.
+Practilume author: **Yifan Yan**. The app develops the product direction discussed for Explain It!, whose original team includes Yifan Yan, Meiyu Shen and Jiachen Yu. This independent extension does not reassign ownership of the team's earlier work. Roadmap items are not represented as completed achievements.
 
 
 

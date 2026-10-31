@@ -1,6 +1,6 @@
 """Original visual examples with independently linked educational references.
 
-The SVGs are StudyBridge illustrations, not downloaded or traced reference images.
+The SVGs are Practilume illustrations, not downloaded or traced reference images.
 """
 from .engine import local_outline, make_course
 
@@ -67,6 +67,6 @@ EXAMPLES = [
 
 
 def example_course(example: dict) -> dict:
-    pages = [{"id": f"example-{example['id']}", "name": f"StudyBridge checked notes · {example['title']}", "page": 1,
+    pages = [{"id": f"example-{example['id']}", "name": f"Practilume checked notes · {example['title']}", "page": 1,
               "text": example["notes"] + "\nThese are manually prepared demonstration notes, not AI image extraction.\nExternal visual reference: " + example["source"]}]
     return make_course(example["title"], pages, local_outline(pages), [example["topic"]])

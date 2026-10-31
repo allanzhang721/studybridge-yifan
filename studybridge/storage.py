@@ -95,7 +95,7 @@ class Store:
 
     def save(self, username: str, state: dict, revision: int) -> int:
         payload = json.dumps(state, ensure_ascii=False)
-        if len(payload.encode()) > 12_000_000:
+        if len(payload.encode()) > 60_000_000:
             raise ValueError("Workspace is full. Export your records, then remove older courses.")
         with self.connect() as db:
             changed = db.execute("UPDATE workspaces SET payload=?,revision=revision+1 WHERE username=? AND revision=?", (payload, username, revision))

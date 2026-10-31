@@ -19,7 +19,7 @@ def render(save, go, use_ai_budget):
         for sample in SAMPLES:
             for suffix in ("png", "txt"):
                 archive.write(ASSETS / f"{sample['id']}.{suffix}", f"{sample['id']}.{suffix}")
-    st.download_button("Download all 3 worksheets + transcripts", package.getvalue(), "studybridge-sample-worksheets.zip", "application/zip")
+    st.download_button("Download all 3 worksheets + transcripts", package.getvalue(), "practilume-sample-worksheets.zip", "application/zip")
     if st.button("Try all 3 mistake examples", type="primary"):
         st.session_state.image_review = {"id": identifier(), "images": prepare_images(
             [(f"{s['id']}.png", (ASSETS / f"{s['id']}.png").read_bytes()) for s in SAMPLES])}

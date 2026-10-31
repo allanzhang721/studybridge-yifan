@@ -1,4 +1,4 @@
-﻿from pathlib import Path
+from pathlib import Path
 
 from streamlit.testing.v1 import AppTest
 
@@ -6,7 +6,7 @@ from studybridge.engine import local_outline
 from studybridge.summary_dashboard import build_summary, board_for
 
 
-APP = Path(__file__).resolve().parents[1] / "app.py"
+APP = Path(__file__).resolve().parents[1] / "legacy_app.py"
 
 
 def test_profile_counts_are_backed_by_visible_marked_work():

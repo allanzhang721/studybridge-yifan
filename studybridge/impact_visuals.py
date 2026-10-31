@@ -114,4 +114,4 @@ def render_proof_demo():
         st.code(chain[-1]["hash"], language=None)
         st.json(chain)
         st.download_button("Download simulated proof", json.dumps({"simulation": True, "expected_root": expected_root,
-                           "records": chain, "verification": result}, indent=2), "studybridge-proof-demo.json", "application/json")
+                           "records": chain, "verification": result}, indent=2), "practilume-proof-demo.json", "application/json")

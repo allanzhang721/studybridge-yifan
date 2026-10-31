@@ -89,7 +89,7 @@ def render(go, render_examples):
     step = demo["step"]
     if demo.get("error"):
         st.error(demo.pop("error"))
-    st.markdown('''<div class="demo-hero"><div class="demo-hero-copy"><div class="demo-kicker">STUDYBRIDGE / DEMO &amp; EXAMPLES</div>
+    st.markdown('''<div class="demo-hero"><div class="demo-hero-copy"><div class="demo-kicker">PRACTILUME / DEMO &amp; EXAMPLES</div>
     <h1>A page of notes.<br>A clearer path forward.</h1>
     <p>See the whole journey, try it yourself, or explore a single topic. Your next step starts here.</p>
     <div class="demo-badges"><span>Sample materials included</span><span>No API needed</span><span>By Yifan Yan</span></div></div>
@@ -289,7 +289,7 @@ def render_step(demo, go):
         ], hide_index=True, width="stretch")
         if demo["answer_examples"] or demo["retest_examples"]:
             st.caption("Some answers were supplied for demonstration. These results are not learning-outcome evidence.")
-        st.download_button("Download my demo journey · JSON", json.dumps(demo["workspace"], ensure_ascii=False, indent=2), "studybridge-demo-journey.json", "application/json")
+        st.download_button("Download my demo journey · JSON", json.dumps(demo["workspace"], ensure_ascii=False, indent=2), "practilume-demo-journey.json", "application/json")
         st.write("**Now try it with your own materials.** Your demo stays separate from your personal courses and the public donation ledger.")
         if st.button("Start with my own worksheet →", type="primary"):
             go("Worksheet images")

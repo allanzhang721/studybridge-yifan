@@ -86,5 +86,5 @@ def render(demo):
     with st.container(border=True):
         stage(8, "The complete journey", "TAKEAWAY · A clear next step after every piece of evidence.")
         st.write("**3 images → reviewed course → mock exam → worked feedback → fresh practice → updated mock → transparent giving preview.**")
-        st.download_button("Download example record · JSON", json.dumps(demo["workspace"], ensure_ascii=False, indent=2), "studybridge-worked-example.json", "application/json", key="story_record")
+        st.download_button("Download example record · JSON", json.dumps(demo["workspace"], ensure_ascii=False, indent=2), "practilume-worked-example.json", "application/json", key="story_record")
 

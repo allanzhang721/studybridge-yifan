@@ -1,7 +1,7 @@
-﻿from pathlib import Path
+from pathlib import Path
 from streamlit.testing.v1 import AppTest
 
-APP = Path(__file__).resolve().parents[1] / "app.py"
+APP = Path(__file__).resolve().parents[1] / "legacy_app.py"
 
 
 def button(app, label):
@@ -134,8 +134,8 @@ def test_calibration_and_saved_workspace_survive_sign_in(tmp_path, monkeypatch):
     assert exam_intact(exam) and exam["fingerprint"] == original
     app.button(key="nav_Plans & account").click().run()
     app.text_input(key="new_username").set_value("qa_student")
-    app.text_input(key="new_password").set_value("StudyBridge123!")
-    app.text_input(key="new_password_again").set_value("StudyBridge123!")
+    app.text_input(key="new_password").set_value("Practilume123!")
+    app.text_input(key="new_password_again").set_value("Practilume123!")
     next(c for c in app.checkbox if "Save my current guest" in c.label).check()
     button(app, "Create workspace").click().run()
     assert not app.exception
@@ -145,7 +145,7 @@ def test_calibration_and_saved_workspace_survive_sign_in(tmp_path, monkeypatch):
     assert not app.session_state["workspace"]["courses"]
     app.button(key="nav_Plans & account").click().run()
     app.text_input(key="login_username").set_value("qa_student")
-    app.text_input(key="login_password").set_value("StudyBridge123!")
+    app.text_input(key="login_password").set_value("Practilume123!")
     button(app, "Sign in").click().run()
     assert not app.exception
     assert len(app.session_state["workspace"]["calibrations"]) == 1
